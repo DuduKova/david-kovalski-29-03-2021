@@ -1,17 +1,23 @@
 import 'react-app-polyfill/ie11';
-import React from 'react';
-import {Field, Formik, FormikHelpers} from 'formik';
-import { Product} from "../../models/types";
+import React, {useEffect, useState} from 'react';
+import {ErrorMessage, Field, Formik, FormikHelpers} from 'formik';
+import {Product} from "../../models/types";
 import {Button, Col, ModalFooter, Row} from 'reactstrap';
 import {addProduct, selectProduct} from '../../reducers';
 import Autocomplete from "react-autocomplete";
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {AddProductSchema} from "./validationSchema";
+import ValidationMessage from "./ValidationMessage";
 
 const AddProductForm = () => {
     const dispatch = useAppDispatch();
     const fakeProducts = useAppSelector(state => state.productsSlice.fakeProducts);
     const selectedProduct = useAppSelector(state => state.productsSlice.selectedProduct);
+    const [productPrice, setProductPrice] = useState(0);
+
+    useEffect(() => {
+        selectedProduct && setProductPrice(selectedProduct.price);
+    }, [selectedProduct]);
 
     return (
         <div>
@@ -33,16 +39,13 @@ const AddProductForm = () => {
                         dispatch(addProduct({...values, id: Date.now()}));
                         setSubmitting(false);
                         resetForm();
+                        setProductPrice(0);
                         dispatch(selectProduct(null));
                     }, 500);
                 }}
             >
                 {({
                       values,
-                      errors,
-                      touched,
-                      handleChange,
-                      handleBlur,
                       handleSubmit,
                       isSubmitting,
                       setFieldValue
@@ -55,9 +58,9 @@ const AddProductForm = () => {
                                     <Autocomplete
                                         menuStyle={{
                                             zIndex: 999,
-                                            left: 174.5,
+                                            right: 174.5,
                                             top: 121.5,
-                                            minWidth: 177,
+                                            width: 500,
                                             borderRadius: 3,
                                             fontSize: '90%',
                                             position: 'fixed',
@@ -70,25 +73,27 @@ const AddProductForm = () => {
                                         }}
                                         items={fakeProducts}
                                         renderItem={(item, isHighlighted) => (
-                                            <div
-                                                style={{background: isHighlighted ? "lightgray" : "white"}}
-                                            >
+                                            <div style={{background: isHighlighted ? "lightgray" : "white"}}>
                                                 {item.title}
                                             </div>
                                         )}
                                         value={values.name}
                                         onChange={e => setFieldValue("name", e.target.value)}
-                                        onSelect={(val) => {
+                                        onSelect={async (val) => {
                                             setFieldValue("name", val);
                                             dispatch(selectProduct(val));
                                         }}
                                     />
+                                    <ErrorMessage name="name"
+                                                  render={() => <ValidationMessage message="Required"/>}/>
                                 </label>
                             </Col>
                             <Col>
                                 <label htmlFor="store" className="col">
                                     Store
                                     <Field id="store" name="store" placeholder="Amazon"/>
+                                    <ErrorMessage name="store"
+                                                  render={() => <ValidationMessage message="Required"/>}/>
                                 </label>
                             </Col>
                         </Row>
@@ -100,8 +105,11 @@ const AddProductForm = () => {
                                         id="price"
                                         name="price"
                                         type="number"
-                                        value={selectedProduct ? selectedProduct.price : 0}
+                                        onChange={(e) => setProductPrice(e.target.value)}
+                                        value={productPrice}
                                     />
+                                    <ErrorMessage name="price"
+                                                  render={() => <ValidationMessage message="Required"/>}/>
                                 </label>
                             </Col>
                             <Col>
@@ -112,10 +120,12 @@ const AddProductForm = () => {
                                         name="deliveryEstimationDate"
                                         type="date"
                                     />
+                                    <ErrorMessage name="deliveryEstimationDate"
+                                                  render={() => <ValidationMessage message="Required"/>}/>
                                 </label>
                             </Col>
                         </Row>
-                        <ModalFooter>
+                        <ModalFooter className="mt-5">
                             <Button disabled={isSubmitting} className="btn-primary" type="submit">Add to list</Button>
                         </ModalFooter>
                     </form>

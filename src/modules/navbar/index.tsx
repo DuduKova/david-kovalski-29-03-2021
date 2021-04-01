@@ -35,7 +35,7 @@ const Navbar = () => {
                 <NavItem className="navItem">
                     <NavLink to='/stores'>Purchase by store</NavLink>
                 </NavItem>
-                <Dropdown nav isOpen={dropdownOpen} toggle={toggle} className="ml-auto">
+                <Dropdown nav isOpen={dropdownOpen} toggle={toggle} className="ml-auto p-3">
                     <DropdownToggle nav caret className="text-dark-grey border-0">
                         Currency {formatCurrency(currency)}
                     </DropdownToggle>

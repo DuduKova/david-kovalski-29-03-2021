@@ -41,35 +41,34 @@ export const getFakeProducts = createAsyncThunk(
 
 export const getRates = createAsyncThunk(
     'products/getRates',
-    async (currency: Currency, {getState, dispatch
+    async (currency: Currency, {
+        getState, dispatch
     }) => {
         // @ts-ignore
         if (getState().productsSlice.apiHasReachLimit) {
             return;
         }
-        try {
-            const {data} = await exchangeratesApi.get<{ rates: { USD: number, ILS: number } }>(`${currency}`);
-            if (!data.rates) {
-                dispatch(setError());
-                // this api returns success 200 when fails, so default values applied here
-                toast.error('rates api is not working right now, we will try again later.', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-                return 'error';
-            }
-            if (data.rates.USD === 1) {
-                return data.rates.ILS
-            }
-            return data.rates.USD
-        } catch (e) {
-            console.error(e)
+        // try {
+        const {data} = await exchangeratesApi.get<{ rates: { USD: number, ILS: number } }>(`${currency}`);
+        if (!data.rates) {
+            dispatch(setError());
+            // this api returns success 200 when fails, so default values applied here
+            toast.error('rates api is not working right now, we will try again later.', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+
+            throw new Error('Failed to get rates');
         }
+        if (data.rates.USD === 1) {
+            return data.rates.ILS
+        }
+        return data.rates.USD
     }
 );
 
@@ -78,8 +77,12 @@ const productsSlice = createSlice({
     initialState,
     reducers: {
         selectProduct(state: MyProductsState, action: PayloadAction<string | null>) {
-            const selected = state.fakeProducts.find((fakeProduct) => fakeProduct.title === action.payload);
-            state.selectedProduct = selected ? formatFakeToProduct(selected) : null;
+            if (action.payload) {
+                const selected = state.fakeProducts.find((fakeProduct) => fakeProduct.title === action.payload);
+                state.selectedProduct = selected ? formatFakeToProduct(selected) : null;
+            } else {
+                state.selectedProduct = null;
+            }
         },
         addProduct(state: MyProductsState, action: PayloadAction<Product>) {
             toast.success('Product added');
@@ -95,18 +98,19 @@ const productsSlice = createSlice({
             state.apiHasReachLimit = true
         }
     },
-    extraReducers: {
-        [getFakeProducts.fulfilled.toString()]: (state, action) => {
-            state.fakeProducts = action.payload
-        },
-        [getRates.fulfilled.toString()]: (state, action) => {
-            if (action.payload === 'error') {
-                state.apiHasReachLimit = true;
-                state.rate = state.currency === 'USD' ? defaultILSRate : defaultUSDRate
-            } else {
+    extraReducers: (builder) => {
+        builder.addCase(getRates.rejected, (state, action) => {
+            state.apiHasReachLimit = true;
+            state.rate = state.currency === 'USD' ? defaultILSRate : defaultUSDRate;
+        }).addCase(getFakeProducts.fulfilled, (state, action) => {
+            if (action.payload) {
+                state.fakeProducts = action.payload
+            }
+        }).addCase(getRates.fulfilled, (state, action) => {
+            if (action.payload) {
                 state.rate = action.payload;
             }
-        }
+        })
     }
 });
 

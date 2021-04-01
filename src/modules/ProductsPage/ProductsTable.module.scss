@@ -1,22 +1,32 @@
 @import '../../styles/colors';
 
 .tableHeader {
-    td,
-    th {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
+  td,
+  th {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }
 
 .tableRows {
-    font-size: 12px;
-    td,
-    th {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
+  font-size: 12px;
+
+  td,
+  th {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }
 
 .bgRow {
-    background-color: $color-lightgrey;
+  background-color: $color-lightgrey;
+}
+
+.smallColumn {
+  white-space: nowrap;
+}
+
+.validationMessage {
+  font-size: 12px;
+  color: red;
 }

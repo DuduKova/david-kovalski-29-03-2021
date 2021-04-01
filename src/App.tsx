@@ -16,10 +16,19 @@ function App() {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(getFakeProducts());
-        setInterval(() => {
-            dispatch(getRates(currency))
+        dispatch(getRates(currency));
+
+        const interval = setInterval(() => {
+            dispatch(getRates(currency));
         },1000 * 10);
+
+        return () => {
+            clearInterval(interval);
+        }
+    }, [currency]);
+
+    useEffect(() => {
+        dispatch(getFakeProducts());
     }, []);
     return (
         <Container>

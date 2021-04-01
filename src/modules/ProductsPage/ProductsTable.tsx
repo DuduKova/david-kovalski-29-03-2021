@@ -26,10 +26,10 @@ const ProductsTable = ({products}: { products: Array<Product> }) => {
             {products.map((product, i) => {
                 return <tr key={i} className={`${i % 2 === 0 && styles.bgRow} ${styles.tableRows}`}>
                     <td>{product.name}</td>
-                    <td>{product.store}</td>
-                    <td>{calcRates(currency, product.price, rate)} {formatCurrency(currency)}</td>
-                    <td>{formatLongDate(product.deliveryEstimationDate)}</td>
-                    <td><Button className="btn-outline" onClick={() => {
+                    <td className={styles.smallColumn}>{product.store}</td>
+                    <td className={styles.smallColumn}>{calcRates(currency, product.price, rate)} {formatCurrency(currency)}</td>
+                    <td className={styles.smallColumn}>{formatLongDate(product.deliveryEstimationDate)}</td>
+                    <td className={styles.smallColumn}><Button className="btn-outline" onClick={() => {
                         dispatch(archiveProduct(product))
                     }}>{product.delivered ? 'Reactive' : 'Archive'}</Button></td>
                 </tr>
