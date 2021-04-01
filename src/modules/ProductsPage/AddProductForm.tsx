@@ -16,7 +16,7 @@ const AddProductForm = () => {
     const [productPrice, setProductPrice] = useState(0);
 
     useEffect(() => {
-        selectedProduct && setProductPrice(selectedProduct.price);
+        selectedProduct && setProductPrice(selectedProduct.price!);
     }, [selectedProduct]);
 
     return (
@@ -100,7 +100,7 @@ const AddProductForm = () => {
                         <Row>
                             <Col>
                                 <label htmlFor="price" className="col">
-                                    Price
+                                    Price in $
                                     <Field
                                         id="price"
                                         name="price"

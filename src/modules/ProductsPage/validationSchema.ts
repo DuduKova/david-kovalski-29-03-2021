@@ -5,7 +5,7 @@ export const AddProductSchema = Yup.object().shape({
         .required('Required'),
     store: Yup.string()
         .required('Required'),
-    price: Yup.number()
+    price: Yup.number().min(1)
         .required('Required'),
     deliveryEstimationDate: Yup.string().required('Required'),
 });

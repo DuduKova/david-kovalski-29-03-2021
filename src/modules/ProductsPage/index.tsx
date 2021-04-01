@@ -3,9 +3,9 @@ import {Button, Col, Nav, NavItem, NavLink, Row} from "reactstrap";
 import {RouteComponentProps} from '@reach/router';
 import ProductsTable from "./ProductsTable";
 import {Product} from "../../models/types";
-import CommonModal from "../common/Modal";
 import AddProductForm from "./AddProductForm";
 import {useAppSelector} from "../../hooks";
+import AddProductModal from './AddProductModal';
 
 const ProductsPage: React.FC<RouteComponentProps> = () => {
     const [modal, setModal] = useState(false);
@@ -14,9 +14,9 @@ const ProductsPage: React.FC<RouteComponentProps> = () => {
     const archives = useAppSelector(state => state.productsSlice.products.filter((product: Product) => product.delivered));
     return (
         <>
-            <CommonModal className="" modal={modal} setModal={() => setModal(!modal)}>
+            <AddProductModal className="" modal={modal} setModal={() => setModal(!modal)}>
                 <AddProductForm/>
-            </CommonModal>
+            </AddProductModal>
 
             <Row className="mb-5">
                 <Col s={8} m={9}>

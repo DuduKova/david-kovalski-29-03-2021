@@ -23,14 +23,16 @@ const StoresTable = ({stores, totalPrice}: { stores: Store[], totalPrice: number
                     return <tr key={i}>
                         <td>{store.store}</td>
                         <td>x{store.quantity}</td>
-                        <td>{calcRates(currency, store.price, rate)} {formatCurrency(currency)}</td>
+                        <td>{formatCurrency(currency)}{calcRates(currency, store.price, rate)}</td>
                     </tr>
                 }) : <h2 className="text-center w-100">No products added.</h2>}
                 </tbody>
             </Table>
-            <Row className="w-100 justify-content-end">
-                <Col sm={3} className="border-bottom border-dark">Total
-                    price: {calcRates(currency, totalPrice, rate)}</Col>
+            <Row className="w-100 justify-content-end mt-5">
+                <Col sm={3} className="border-bottom border-dark">
+                    <p className="d-flex justify-content-end">Total
+                        price: <span className="ml-auto">{formatCurrency(currency)}{calcRates(currency, totalPrice, rate)}</span></p>
+                </Col>
             </Row>
         </>
     );

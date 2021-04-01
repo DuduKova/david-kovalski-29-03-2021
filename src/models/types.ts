@@ -23,7 +23,6 @@ export interface Product {
     delivered: boolean;
 }
 
-
 export interface Store {
     store: string;
     quantity: number

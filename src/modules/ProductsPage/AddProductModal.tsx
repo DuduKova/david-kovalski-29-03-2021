@@ -4,7 +4,7 @@ import React from 'react';
 import {Modal, ModalBody, ModalHeader} from 'reactstrap';
 import {RouteComponentProps} from "reach__router";
 
-const CommonModal: React.FC<RouteComponentProps & {
+const AddProductModal: React.FC<RouteComponentProps & {
     className: string,
     modal: boolean,
     setModal: (arg: boolean) => void,
@@ -29,4 +29,4 @@ const CommonModal: React.FC<RouteComponentProps & {
     );
 };
 
-export default CommonModal;
+export default AddProductModal;
