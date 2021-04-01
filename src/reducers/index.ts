@@ -4,6 +4,7 @@ import fakestoreApi from "../api/fakestoreApi";
 import {formatFakeToProduct} from "../utils/formatting";
 import exchangeratesApi from "../api/exchangeratesApi";
 import {defaultILSRate, defaultUSDRate} from "../utils/constans";
+import {toast} from 'react-toastify';
 
 interface MyProductsState {
     products: Product[],
@@ -12,9 +13,18 @@ interface MyProductsState {
     currency: Currency,
     isLoading: boolean,
     rate: number,
+    apiHasReachLimit: boolean
 }
 
-const initialState = { products: [], fakeProducts: [], selectedProduct: null, isLoading: false, currency: 'USD', rate: 1 } as MyProductsState;
+const initialState = {
+    products: [],
+    fakeProducts: [],
+    selectedProduct: null,
+    isLoading: false,
+    currency: 'USD',
+    rate: 1,
+    apiHasReachLimit: false
+} as MyProductsState;
 
 export const getFakeProducts = createAsyncThunk(
     'products/getProducts',
@@ -23,6 +33,7 @@ export const getFakeProducts = createAsyncThunk(
             const {data} = await fakestoreApi.get<FakeStoreProduct[]>('');
             return data
         } catch (e) {
+            toast('cant get products try again later');
             console.error(e)
         }
     }
@@ -30,12 +41,27 @@ export const getFakeProducts = createAsyncThunk(
 
 export const getRates = createAsyncThunk(
     'products/getRates',
-    async (currency: Currency) => {
+    async (currency: Currency, {getState, dispatch
+    }) => {
+        // @ts-ignore
+        if (getState().productsSlice.apiHasReachLimit) {
+            return;
+        }
         try {
-            const {data} = await exchangeratesApi.get<{rates: {USD: number, ILS: number}}>(`${currency}`);
+            const {data} = await exchangeratesApi.get<{ rates: { USD: number, ILS: number } }>(`${currency}`);
             if (!data.rates) {
+                dispatch(setError());
                 // this api returns success 200 when fails, so default values applied here
-                return currency === 'USD' ? defaultILSRate : defaultUSDRate;
+                toast.error('rates api is not working right now, we will try again later.', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+                return 'error';
             }
             if (data.rates.USD === 1) {
                 return data.rates.ILS
@@ -56,6 +82,7 @@ const productsSlice = createSlice({
             state.selectedProduct = selected ? formatFakeToProduct(selected) : null;
         },
         addProduct(state: MyProductsState, action: PayloadAction<Product>) {
+            toast.success('Product added =]');
             state.products.push({...action.payload, price: state.selectedProduct!.price})
         },
         archiveProduct(state, action: PayloadAction<Product>) {
@@ -64,16 +91,24 @@ const productsSlice = createSlice({
         setCurrency(state, action: PayloadAction<Currency>) {
             state.currency = action.payload
         },
+        setError(state) {
+            state.apiHasReachLimit = true
+        }
     },
     extraReducers: {
         [getFakeProducts.fulfilled.toString()]: (state, action) => {
             state.fakeProducts = action.payload
         },
         [getRates.fulfilled.toString()]: (state, action) => {
-            state.rate = action.payload
+            if (action.payload === 'error') {
+                state.apiHasReachLimit = true;
+                state.rate = state.currency === 'USD' ? defaultILSRate : defaultUSDRate
+            } else {
+                state.rate = action.payload;
+            }
         }
     }
 });
 
-export const { addProduct, archiveProduct, selectProduct, setCurrency } = productsSlice.actions;
+export const {addProduct, archiveProduct, selectProduct, setCurrency, setError} = productsSlice.actions;
 export default productsSlice.reducer

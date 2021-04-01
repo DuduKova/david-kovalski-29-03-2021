@@ -1,9 +1,15 @@
 $color-white: #ffffff;
+$color-lightgrey: #dde3e8;
 $color-grey: #9b9b9b;
 $color-grey2: #cdcdcd;
 $color-dark-grey: #707070;
 $color-blue-sky: #009ef6;
 $color-purple: #3d0598;
+$color-green: #2ecc71;
+
+.text-dark-grey {
+    color: $color-dark-grey;
+}
 
 .text-purple {
     color: $color-purple;

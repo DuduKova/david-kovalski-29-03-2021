@@ -8,10 +8,13 @@ import StoresPage from './modules/storesPage';
 import {ScrollToTop} from './ScrollToTop';
 import {useAppDispatch, useAppSelector} from "./hooks";
 import {getFakeProducts, getRates} from "./reducers";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 function App() {
     const currency = useAppSelector(state => state.productsSlice.currency);
     const dispatch = useAppDispatch();
+
     useEffect(() => {
         dispatch(getFakeProducts());
         setInterval(() => {
@@ -20,6 +23,11 @@ function App() {
     }, []);
     return (
         <Container>
+            <ToastContainer
+                limit={1}
+                pauseOnFocusLoss
+                closeButton
+            />
             <Navbar/>
             <Router>
                 <ScrollToTop path="/">
