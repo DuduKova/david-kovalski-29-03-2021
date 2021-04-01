@@ -1,0 +1,15 @@
+$color-white: #ffffff;
+$color-grey: #9b9b9b;
+$color-grey2: #cdcdcd;
+$color-dark-grey: #707070;
+$color-blue-sky: #009ef6;
+$color-purple: #3d0598;
+
+.text-purple {
+    color: $color-purple;
+}
+
+.border-purple {
+    border: 1px $color-purple solid;
+    border-radius: 5px;
+}

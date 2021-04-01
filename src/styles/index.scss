@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+@import 'colors';
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Open Sans', sans-serif;
+    overflow-x: hidden;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-size: 1.6rem;
+
+    .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+
+    .btn-primary {
+        color: $color-white;
+        background-color: $color-purple;
+        border: none;
+        border-radius: 5px;
+        width: 150px;
+        height: 40px;
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        transition: all 250ms;
+        margin-top: 10px;
+
+        &:hover {
+            color: $color-white;
+            background-color: rgba($color-purple, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            width: 100%;
+        }
+    }
+
+    .btn-outline {
+        color: $color-purple;
+        background-color: transparent;
+        border: 1px $color-purple solid;
+        border-radius: 5px;
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        width: 150px;
+        height: 40px;
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.07);
+        margin-bottom: 10px;
+        margin-top: 10px;
+        transition: all 250ms;
+
+        &:hover {
+            color: $color-purple;
+            background-color: rgba($color-purple, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            width: 100%;
+        }
+    }
+    .z-index-999 {
+        z-index: 999 !important;
+    }
+
+    .navItem {
+        margin: 15px 25px;
+        font-weight: bold;
+        text-transform: capitalize;
+
+        a {
+            &:hover {
+                color: $color-blue-sky;
+            }
+        }
+    }
+
+    .swing-in-top-fwd {
+        -webkit-animation: swing-in-top-fwd 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+        animation: swing-in-top-fwd 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    }
+
+    @-webkit-keyframes swing-in-top-fwd {
+        0% {
+            -webkit-transform: rotateX(-100deg);
+            transform: rotateX(-100deg);
+            -webkit-transform-origin: top;
+            transform-origin: top;
+            opacity: 0;
+        }
+        100% {
+            -webkit-transform: rotateX(0deg);
+            transform: rotateX(0deg);
+            -webkit-transform-origin: top;
+            transform-origin: top;
+            opacity: 1;
+        }
+    }
+
+    @keyframes swing-in-top-fwd {
+        0% {
+            -webkit-transform: rotateX(-100deg);
+            transform: rotateX(-100deg);
+            -webkit-transform-origin: top;
+            transform-origin: top;
+            opacity: 0;
+        }
+        100% {
+            -webkit-transform: rotateX(0deg);
+            transform: rotateX(0deg);
+            -webkit-transform-origin: top;
+            transform-origin: top;
+            opacity: 1;
+        }
+    }
+}
