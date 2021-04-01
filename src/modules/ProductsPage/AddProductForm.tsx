@@ -1,6 +1,6 @@
 import 'react-app-polyfill/ie11';
-import React, {useEffect, useState} from 'react';
-import {ErrorMessage, Field, Formik, FormikHelpers} from 'formik';
+import React from 'react';
+import {ErrorMessage, Field, Formik} from 'formik';
 import {Product} from "../../models/types";
 import {Button, Col, ModalFooter, Row} from 'reactstrap';
 import {addProduct, selectProduct} from '../../reducers';
@@ -9,39 +9,36 @@ import {useAppDispatch, useAppSelector} from "../../hooks";
 import {AddProductSchema} from "./validationSchema";
 import ValidationMessage from "./ValidationMessage";
 
+type ProductForm = Partial<Product>;
+
 const AddProductForm = () => {
     const dispatch = useAppDispatch();
     const fakeProducts = useAppSelector(state => state.productsSlice.fakeProducts);
     const selectedProduct = useAppSelector(state => state.productsSlice.selectedProduct);
-    const [productPrice, setProductPrice] = useState(0);
 
-    useEffect(() => {
-        selectedProduct && setProductPrice(selectedProduct.price!);
-    }, [selectedProduct]);
+    const initialFormValues = {
+        id: selectedProduct?.id,
+        name: selectedProduct?.title || '',
+        store: '',
+        price: selectedProduct?.price || 0,
+        deliveryEstimationDate: '',
+        delivered: false
+    };
 
     return (
         <div>
-            <Formik
-                initialValues={{
-                    id: 0,
-                    name: '',
-                    store: '',
-                    price: 0,
-                    deliveryEstimationDate: '',
-                    delivered: false
-                }}
+            <Formik<ProductForm>
+                enableReinitialize
+                initialValues={initialFormValues}
                 validationSchema={AddProductSchema}
                 onSubmit={(
-                    values: Product,
-                    {setSubmitting, resetForm}: FormikHelpers<Product>
+                    values,
+                    {setSubmitting, resetForm}
                 ) => {
-                    setTimeout(() => {
-                        dispatch(addProduct({...values, id: Date.now()}));
-                        setSubmitting(false);
-                        resetForm();
-                        setProductPrice(0);
-                        dispatch(selectProduct(null));
-                    }, 500);
+                    dispatch(addProduct({...values, id: Date.now()} as Product));
+                    dispatch(selectProduct(null));
+                    setSubmitting(false);
+                    resetForm();
                 }}
             >
                 {({
@@ -105,8 +102,6 @@ const AddProductForm = () => {
                                         id="price"
                                         name="price"
                                         type="number"
-                                        onChange={(e) => setProductPrice(e.target.value)}
-                                        value={productPrice}
                                     />
                                     <ErrorMessage name="price"
                                                   render={() => <ValidationMessage message="Required"/>}/>

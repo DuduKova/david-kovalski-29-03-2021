@@ -1,7 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {Currency, FakeStoreProduct, Product} from "../models/types";
 import fakestoreApi from "../api/fakestoreApi";
-import {formatFakeToProduct} from "../utils/formatting";
 import exchangeratesApi from "../api/exchangeratesApi";
 import {defaultILSRate, defaultUSDRate} from "../utils/constans";
 import {toast} from 'react-toastify';
@@ -9,7 +8,7 @@ import {toast} from 'react-toastify';
 interface MyProductsState {
     products: Product[],
     fakeProducts: FakeStoreProduct[],
-    selectedProduct: Product | null,
+    selectedProduct: FakeStoreProduct | null,
     currency: Currency,
     isLoading: boolean,
     rate: number,
@@ -48,7 +47,6 @@ export const getRates = createAsyncThunk(
         if (getState().productsSlice.apiHasReachLimit) {
             return;
         }
-        // try {
         const {data} = await exchangeratesApi.get<{ rates: { USD: number, ILS: number } }>(`${currency}`);
         if (!data.rates) {
             dispatch(setError());
@@ -79,14 +77,14 @@ const productsSlice = createSlice({
         selectProduct(state: MyProductsState, action: PayloadAction<string | null>) {
             if (action.payload) {
                 const selected = state.fakeProducts.find((fakeProduct) => fakeProduct.title === action.payload);
-                state.selectedProduct = selected ? formatFakeToProduct(selected) : null;
+                state.selectedProduct = selected!;
             } else {
                 state.selectedProduct = null;
             }
         },
         addProduct(state: MyProductsState, action: PayloadAction<Product>) {
             toast.success('Product added');
-            state.products.push({...action.payload, price: state.selectedProduct!.price})
+            state.products.push({...action.payload})
         },
         archiveProduct(state, action: PayloadAction<Product>) {
             state.products.find((product) => product.id === action.payload.id)!.delivered = !action.payload.delivered;
