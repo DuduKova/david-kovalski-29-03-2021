@@ -3,7 +3,7 @@ import {Button, Table} from 'reactstrap';
 import {Product} from "../../models/types";
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {archiveProduct} from '../../reducers';
-import styles from './CommonTable.module.scss';
+import styles from './ProductsTable.module.scss';
 import {formatCurrency, formatLongDate} from "../../utils/formatting";
 import {calcRates} from "../../utils/calcRates";
 
@@ -24,7 +24,7 @@ const ProductsTable = ({products}: { products: Array<Product> }) => {
             </thead>
             <tbody>
             {products.map((product, i) => {
-                return <tr key={i} className={`${i % 2 === 0 && 'bg-grey'} ${styles.tableRows}`}>
+                return <tr key={i} className={`${i % 2 === 0 && styles.bgRow} ${styles.tableRows}`}>
                     <td>{product.name}</td>
                     <td>{product.store}</td>
                     <td>{calcRates(currency, product.price, rate)} {formatCurrency(currency)}</td>

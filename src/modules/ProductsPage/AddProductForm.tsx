@@ -46,7 +46,6 @@ const AddProductForm = () => {
                       handleSubmit,
                       isSubmitting,
                       setFieldValue
-                      /* and other goodies */
                   }) => (
                     <form onSubmit={handleSubmit}>
                         <Row>
@@ -66,6 +65,9 @@ const AddProductForm = () => {
                                             maxHeight: '50%'
                                         }}
                                         getItemValue={item => item.title}
+                                        shouldItemRender={(item, value) => {
+                                            return item.title.toUpperCase().includes(value.toUpperCase())
+                                        }}
                                         items={fakeProducts}
                                         renderItem={(item, isHighlighted) => (
                                             <div

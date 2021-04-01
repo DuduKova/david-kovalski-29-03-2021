@@ -24,7 +24,7 @@ function App() {
     return (
         <Container>
             <ToastContainer
-                limit={1}
+                limit={2}
                 pauseOnFocusLoss
                 closeButton
             />

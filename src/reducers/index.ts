@@ -82,7 +82,7 @@ const productsSlice = createSlice({
             state.selectedProduct = selected ? formatFakeToProduct(selected) : null;
         },
         addProduct(state: MyProductsState, action: PayloadAction<Product>) {
-            toast.success('Product added =]');
+            toast.success('Product added');
             state.products.push({...action.payload, price: state.selectedProduct!.price})
         },
         archiveProduct(state, action: PayloadAction<Product>) {

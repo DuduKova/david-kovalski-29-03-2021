@@ -28,7 +28,7 @@ const Navbar = () => {
     };
     const toggle = () => setDropdownOpen(!dropdownOpen);
     return (
-            <Nav tabs>
+            <Nav tabs className="mb-5">
                 <NavItem className="navItem">
                     <NavLink to="/">Purchase by item</NavLink>
                 </NavItem>

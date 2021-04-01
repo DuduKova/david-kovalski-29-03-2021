@@ -18,7 +18,7 @@ const ProductsPage: React.FC<RouteComponentProps> = () => {
                 <AddProductForm/>
             </CommonModal>
 
-            <Row className="mb-1">
+            <Row className="mb-5">
                 <Col s={8} m={9}>
                     <Nav tabs fill>
                         <NavItem>
@@ -34,7 +34,7 @@ const ProductsPage: React.FC<RouteComponentProps> = () => {
                     </Nav>
                 </Col>
             </Row>
-            <Row className="d-flex justify-content-end">
+            <Row className="d-flex justify-content-center mb-5">
                 <Button className="btn-primary" onClick={() => {
                     setModal(!modal)
                 }}>
